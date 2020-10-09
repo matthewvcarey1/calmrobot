@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/robotview"
@@ -11,11 +12,13 @@ import (
 var verbose = flag.Bool("verbose", false, "prints large maps of the land before and after the flood fill, best pipe to a file")
 
 func main() {
+	t1 := time.Now()
+	defer func() {
+		fmt.Println("Time taken:", time.Now().Sub(t1))
+	}()
 	flag.Parse()
-	// 789 is chosen as 7+8+9=24
-	// Every coordinate with 789 in will be a mine
-	// Thus there will be complete enclosure of mines
-	land := mapland.New(789*2 + 1)
+	// 1400x1400 is the smallest world that will work (by trial and error)
+	land := mapland.New(1400)
 	rv := robotview.New(land)
 	// Mark all the mines on the map
 	rv.MarkMines()
@@ -24,7 +27,12 @@ func main() {
 	}
 	// Flood fill the from the centre of the map
 	// the accessable coordinates
-	count := rv.FloodFill(0, 0)
+	count, err := rv.FloodFill(0, 0)
+	if err != nil {
+		// An error about the flood reaching the edge of the world
+		println("Error:", err.Error())
+		return
+	}
 	if *verbose {
 		fmt.Println()
 		land.Draw()
