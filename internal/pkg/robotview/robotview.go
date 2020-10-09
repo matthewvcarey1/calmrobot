@@ -4,14 +4,18 @@ import (
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
 )
 
+// RobotView type
 type RobotView struct {
 	land *mapland.MapLand
 }
 
+
 const (
+	// The safe threshold
 	safe = 23
 )
 
+// Get array of digits in a positive or negative decimal number
 func getDigits(num int) []int {
 	var res []int
 	if num < 0 {
@@ -28,6 +32,7 @@ func getDigits(num int) []int {
 	return res
 }
 
+// sum an array of ints
 func sum(arr []int) int {
 	res := int(0)
 	for _, v := range arr {
@@ -36,23 +41,27 @@ func sum(arr []int) int {
 	return res
 }
 
+// isSafe checks whether a coordinate is safe
 func isSafe(x int, y int) bool {
 	digits := getDigits(x)
 	digits = append(digits, getDigits(y)...)
 	return (sum(digits) <= safe)
 }
 
-func New(land *mapland.MapLand) *RobotViewView {
+// New RobotView
+func New(land *mapland.MapLand) *RobotView {
 	return &RobotView{land: land}
 }
 
+// robot storing its coodinates
 type robot struct {
 	x int
 	y int
 }
 
+// Mark all the mines in the land
 func (r *RobotView) MarkMines() {
-	x1, y1, x2, y2 := r.land.GetMinMax()
+	x1, y1, x2, y2 := r.land.GetStartEnd()
 	for x := x1; x < x2; x++ {
 		for y := y1; y < y2; y++ {
 			if !isSafe(x, y) {
@@ -64,22 +73,28 @@ func (r *RobotView) MarkMines() {
 	}
 }
 
+// east makes a new eastwards robot 
 func (r robot) east() robot {
 	return robot{r.x + 1, r.y}
 }
 
+// west makes a new westwards robot 
 func (r robot) west() robot {
 	return robot{r.x - 1, r.y}
 }
 
+// south makes a new southwards robot
 func (r robot) south() robot {
 	return robot{r.x, r.y - 1}
 }
 
+// north makes a new northwards robot
 func (r robot) north() robot {
 	return robot{r.x, r.y + 1}
 }
 
+// FloodFill marks the available non mined space as accesable
+// by robot and returns the number of coordinates it contains
 func (rv *RobotView) FloodFill(x int, y int) int {
 	var queue []robot
 	count := int(0)
