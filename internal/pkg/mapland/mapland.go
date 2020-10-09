@@ -14,15 +14,12 @@ func New(size uint) *MapLand {
 	if size%2 > 0 {
 		size++
 	}
-	
+
 	land := make([][]byte, size)
 	for i := range land {
 		land[i] = make([]byte, size)
-		for iq := range land[i] {
-			land[i][iq] = 0x20
-		}
 	}
-	return &MapLand{size: len(land[0]), half: len(land[0])>>1, land: land}
+	return &MapLand{size: len(land[0]), half: len(land[0]) >> 1, land: land}
 }
 
 // GetStartEnd the start and ends of the land in robotview coordinates
@@ -38,7 +35,7 @@ func (m *MapLand) Get(x int, y int) byte {
 }
 
 // Set mark a coordinate as visitable
-func (m *MapLand) Set(x int, y int) {
+func (m *MapLand) SetAccessable(x int, y int) {
 	x += m.half
 	y += m.half
 	m.land[x][y] = 0x4F
@@ -58,6 +55,7 @@ func (m *MapLand) SetClear(x int, y int) {
 	m.land[x][y] = 0x20
 }
 
+// This is not used but could be used for testing.
 // Count the robot visitable area
 func (m *MapLand) Count() int {
 	count := 0

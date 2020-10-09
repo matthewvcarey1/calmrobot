@@ -1,6 +1,8 @@
 package robotview
 
 import (
+	"errors"
+
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
 )
 
@@ -8,7 +10,6 @@ import (
 type RobotView struct {
 	land *mapland.MapLand
 }
-
 
 const (
 	// The safe threshold
@@ -73,12 +74,12 @@ func (r *RobotView) MarkMines() {
 	}
 }
 
-// east makes a new eastwards robot 
+// east makes a new eastwards robot
 func (r robot) east() robot {
 	return robot{r.x + 1, r.y}
 }
 
-// west makes a new westwards robot 
+// west makes a new westwards robot
 func (r robot) west() robot {
 	return robot{r.x - 1, r.y}
 }
@@ -94,14 +95,15 @@ func (r robot) north() robot {
 }
 
 // FloodFill marks the available non mined space as accesable
-// by robot and returns the number of coordinates it contains
-func (rv *RobotView) FloodFill(x int, y int) int {
+// by the robot and returns the number of coordinates it contains
+func (rv *RobotView) FloodFill(x int, y int) (int, error) {
 	var queue []robot
+	x1, y1, x2, y2 := rv.land.GetStartEnd()
 	count := int(0)
 	if rv.land.Get(x, y) != 0x20 {
-		return 0
+		return 0, nil
 	}
-	rv.land.Set(x, y)
+	rv.land.SetAccessable(x, y)
 	count++
 	queue = append(queue, robot{
 		x: x,
@@ -110,26 +112,29 @@ func (rv *RobotView) FloodFill(x int, y int) int {
 	for len(queue) > 0 {
 		r := queue[0]     // first element
 		queue = queue[1:] //Dequeue
+		if (r.x) == x1 || r.x == x2-1 || r.y == y1 || r.y == y2-1 {
+			return 0, errors.New("FloodFill has reached the edge of the world, the world needs to be bigger")
+		}
 		if w := r.west(); rv.land.Get(w.x, w.y) == 0x20 {
-			rv.land.Set(w.x, w.y)
+			rv.land.SetAccessable(w.x, w.y)
 			count++
 			queue = append(queue, w)
 		}
 		if e := r.east(); rv.land.Get(e.x, e.y) == 0x20 {
-			rv.land.Set(e.x, e.y)
+			rv.land.SetAccessable(e.x, e.y)
 			count++
 			queue = append(queue, e)
 		}
 		if n := r.north(); rv.land.Get(n.x, n.y) == 0x20 {
-			rv.land.Set(n.x, n.y)
+			rv.land.SetAccessable(n.x, n.y)
 			count++
 			queue = append(queue, n)
 		}
 		if s := r.south(); rv.land.Get(s.x, s.y) == 0x20 {
-			rv.land.Set(s.x, s.y)
+			rv.land.SetAccessable(s.x, s.y)
 			count++
 			queue = append(queue, s)
 		}
 	}
-	return count
+	return count, nil
 }
