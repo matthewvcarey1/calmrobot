@@ -1,15 +1,11 @@
 package robot
 
 import (
-	"fmt"
-
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
 )
 
 type Robot struct {
-	x    int
-	y    int
-	land *mapland.Mapland
+	land *mapland.MapLand
 }
 
 const (
@@ -47,55 +43,79 @@ func isSafe(x int, y int) bool {
 }
 
 func New(land *mapland.MapLand) *Robot {
-	return &Robot{x: 0, y: 0, land & mapland.MapLand}
+	return &Robot{land: land}
 }
 
-func (r *Robot) WalkWest() bool {
-	if isSafe(r.x-1, r.y) {
-		r.x -= 1
-		r.land.Set(r.x, r.y)
-		return true
-	}
-	return false
+type pair struct {
+	x int
+	y int
 }
 
-func (r *Robot) WalkEast() bool {
-	if isSafe(r.x+1, r.y) {
-		r.x += 1
-		r.land.Set(r.x, r.y)
-		return true
-	}
-	return false
-}
-
-func (r *Robot) WalkNorth() bool {
-	if isSafe(r.x, r.y+1) {
-		r.y += 1
-		r.land.Set(r.x, r.y)
-		return true
-	}
-	return false
-}
-
-func (r *Robot) WalkSouth() bool {
-	if isSafe(r.x, r.y-1) {
-		r.y -= 1
-		r.land.Set(r.x, r.y)
-		return true
-	}
-	return false
-}
-
-func (r *Robot) DrawMapLand() {
+func (r *Robot) MarkMines() {
 	x1, y1, x2, y2 := r.land.GetMinMax()
 	for x := x1; x < x2; x++ {
-		for y := y1; y < x2; y++ {
+		for y := y1; y < y2; y++ {
 			if !isSafe(x, y) {
-				fmt.Print("X")
+				r.land.SetMine(x, y)
 			} else {
-				fmt.Print("O")
+				r.land.SetClear(x, y)
 			}
 		}
-		fmt.Println()
 	}
+}
+
+func east(p pair)pair{
+	return pair{p.x+1, p.y}
+}
+
+func west(p pair) pair{
+	return  pair{p.x-1, p.y}
+}
+
+func south(p pair)pair{
+	return pair{p.x, p.y-1}
+}
+
+func north(p pair)pair{
+	return pair{p.x, p.y+1}
+}
+
+
+func (r *Robot) FloodFill(x int, y int) int {
+	var queue []pair
+	count := int(0)
+	if r.land.Get(x, y) != 0x20 {
+		return 0
+	}
+	r.land.Set(x, y)
+	count++
+	queue = append(queue, pair{
+		x: x,
+		y: y,
+	})
+	for len(queue) > 0 {
+		p := queue[0]     // first element
+		queue = queue[1:] //Dequeue
+		if w:=west(p); r.land.Get(w.x,w.y) == 0x20 {
+			r.land.Set(w.x, w.y)
+			count++
+			queue = append(queue, w)
+		}
+		if e:=east(p); r.land.Get(e.x, e.y) == 0x20 {
+			r.land.Set(e.x, e.y)
+			count++
+			queue = append(queue, e)
+		}
+		if n:=north(p); r.land.Get(n.x, n.y) == 0x20 {
+			r.land.Set(n.x, n.y)
+			count++
+			queue = append(queue, n)
+		}
+		if s:=south(p); r.land.Get(s.x, s.y) == 0x20 {
+			r.land.Set(s.x, s.y)
+			count++
+			queue = append(queue, s)
+		}
+	}
+	return count
 }
