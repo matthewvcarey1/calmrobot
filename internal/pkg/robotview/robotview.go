@@ -1,7 +1,7 @@
 package robotview
 
 import (
-	"github.com/matthewvcarey1/calmrobot/pkg/internal/pkg/mapland"
+	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
 )
 
 type RobotView struct {
