@@ -1,6 +1,12 @@
 package mapland
 
-import "fmt"
+import (
+	"fmt"
+	"image"
+	"image/color"
+	"image/png"
+	"os"
+)
 
 // MapLand type
 type MapLand struct {
@@ -73,5 +79,39 @@ func (m *MapLand) Count() int {
 func (m *MapLand) Draw() {
 	for _, x := range m.land {
 		fmt.Println(string(x))
+	}
+}
+
+// Draw the whole map as a png file
+func (m *MapLand) DrawImage(fname string) {
+	upLeft := image.Point{0, 0}
+	lowRight := image.Point{m.size, m.size}
+	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
+	Red := color.RGBA{uint32(0xff, 0x00, 0x00, 0xff}
+	accessableColour := color.RGBA{0x1d, 0xd8, 0x80, 0xff}
+	for x, c := range m.land {
+		for y, v := range c {
+			px := m.size - x
+			py := m.size - y
+			switch v {
+			case 0x20:
+				img.Set(px, py, color.White)
+			case 0x58:
+				img.Set(px, py, Red)
+			case 0x4F:
+				img.Set(px, py, accessableColour)
+			default:
+				// Use zero value.
+			}
+		}
+	}
+	f, err := os.Create(fname)
+	if err != nil {
+		println("Could not create output file:", fname)
+		return
+	}
+	err = png.Encode(f, img)
+	if err != nil {
+		println("Could not write output file:", fname)
 	}
 }
