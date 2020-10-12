@@ -10,6 +10,7 @@ import (
 )
 
 var verbose = flag.Bool("verbose", false, "prints large maps of the land before and after the flood fill, best pipe to a file")
+var images = flag.Bool("images", false, "generates png files")
 
 func main() {
 	t1 := time.Now()
@@ -25,6 +26,9 @@ func main() {
 	if *verbose {
 		land.Draw()
 	}
+	if *images {
+		land.DrawImage("mines.png")
+	}
 	// Flood fill the from the centre of the map
 	// the accessable coordinates
 	count, err := rv.FloodFill(0, 0)
@@ -36,6 +40,9 @@ func main() {
 	if *verbose {
 		fmt.Println()
 		land.Draw()
+	}
+	if *images {
+		land.DrawImage("robot.png")
 	}
 	fmt.Println("The robot can access", count, "coordinates")
 

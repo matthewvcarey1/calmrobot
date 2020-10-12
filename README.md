@@ -15,9 +15,17 @@ or
 
 This prints the large maps as acsii text to stdout
 
+./robot.exe -images
+
+This writes two png image files mines.png and robot.png showing the world as a picture.
+The file mines.png shows the mines and robot.png shows the accessable areas for the robot. (see picture)
+
 ./robot.exe -help
 
 Prints a help text and exits
+
+
+![Robot](robot.png)
 
 ## Improvents
 
