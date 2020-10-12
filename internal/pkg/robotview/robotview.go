@@ -100,7 +100,7 @@ func (rv *RobotView) FloodFill(x int, y int) (int, error) {
 	var queue []robot
 	x1, y1, x2, y2 := rv.land.GetStartEnd()
 	count := int(0)
-	if rv.land.Get(x, y) != 0x20 {
+	if !rv.land.IsClear(x, y) {
 		return 0, nil
 	}
 	rv.land.SetAccessable(x, y)
@@ -115,22 +115,22 @@ func (rv *RobotView) FloodFill(x int, y int) (int, error) {
 		if (r.x) == x1 || r.x == x2-1 || r.y == y1 || r.y == y2-1 {
 			return 0, errors.New("FloodFill has reached the edge of the world, the world needs to be bigger")
 		}
-		if w := r.west(); rv.land.Get(w.x, w.y) == 0x20 {
+		if w := r.west(); rv.land.IsClear(w.x, w.y) {
 			rv.land.SetAccessable(w.x, w.y)
 			count++
 			queue = append(queue, w)
 		}
-		if e := r.east(); rv.land.Get(e.x, e.y) == 0x20 {
+		if e := r.east(); rv.land.IsClear(e.x, e.y) {
 			rv.land.SetAccessable(e.x, e.y)
 			count++
 			queue = append(queue, e)
 		}
-		if n := r.north(); rv.land.Get(n.x, n.y) == 0x20 {
+		if n := r.north(); rv.land.IsClear(n.x, n.y) {
 			rv.land.SetAccessable(n.x, n.y)
 			count++
 			queue = append(queue, n)
 		}
-		if s := r.south(); rv.land.Get(s.x, s.y) == 0x20 {
+		if s := r.south(); rv.land.IsClear(s.x, s.y) {
 			rv.land.SetAccessable(s.x, s.y)
 			count++
 			queue = append(queue, s)

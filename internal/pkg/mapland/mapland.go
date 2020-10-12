@@ -8,6 +8,12 @@ import (
 	"os"
 )
 
+const (
+	clear      = 0x20
+	mine       = 0x58
+	accessable = 0x4F
+)
+
 // MapLand type
 type MapLand struct {
 	size int
@@ -40,25 +46,29 @@ func (m *MapLand) Get(x int, y int) byte {
 	return m.land[x][y]
 }
 
+func (m *MapLand) IsClear(x int, y int) bool {
+	return m.Get(x, y) == clear
+}
+
 // Set mark a coordinate as visitable
 func (m *MapLand) SetAccessable(x int, y int) {
 	x += m.half
 	y += m.half
-	m.land[x][y] = 0x4F
+	m.land[x][y] = accessable
 }
 
 // SetMine mark a coordinate as a mine
 func (m *MapLand) SetMine(x int, y int) {
 	x += m.half
 	y += m.half
-	m.land[x][y] = 0x58
+	m.land[x][y] = mine
 }
 
 // SetClear mark a coordinate as not a mine
 func (m *MapLand) SetClear(x int, y int) {
 	x += m.half
 	y += m.half
-	m.land[x][y] = 0x20
+	m.land[x][y] = clear
 }
 
 // This is not used but could be used for testing.
@@ -67,7 +77,7 @@ func (m *MapLand) Count() int {
 	count := 0
 	for _, x := range m.land {
 		for _, y := range x {
-			if y == 0x4F {
+			if y == accessable {
 				count++
 			}
 		}
@@ -87,18 +97,18 @@ func (m *MapLand) DrawImage(fname string) {
 	upLeft := image.Point{0, 0}
 	lowRight := image.Point{m.size, m.size}
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
-	Red := color.RGBA{uint32(0xff, 0x00, 0x00, 0xff}
+	Red := color.RGBA{0xff, 0x00, 0x00, 0xff}
 	accessableColour := color.RGBA{0x1d, 0xd8, 0x80, 0xff}
 	for x, c := range m.land {
 		for y, v := range c {
 			px := m.size - x
 			py := m.size - y
 			switch v {
-			case 0x20:
+			case clear:
 				img.Set(px, py, color.White)
-			case 0x58:
+			case mine:
 				img.Set(px, py, Red)
-			case 0x4F:
+			case accessable:
 				img.Set(px, py, accessableColour)
 			default:
 				// Use zero value.
