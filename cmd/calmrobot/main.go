@@ -18,7 +18,8 @@ func main() {
 		fmt.Println("Time taken:", time.Now().Sub(t1))
 	}()
 	flag.Parse()
-	// 1400x1400 is the smallest world that will work (by trial and error)
+	// 1400x1400 is the smallest world that will work (699 * 2 + 2)
+	// 6 + 9 + 9 = 24 even one coordinate will cause a mine
 	land := mapland.New(1400)
 	rv := robotview.New(land)
 	// Mark all the mines on the map
