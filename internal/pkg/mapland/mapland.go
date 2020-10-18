@@ -21,12 +21,22 @@ type MapLand struct {
 	land [][]byte
 }
 
-// New MapLand
-func New(size uint) *MapLand {
-	if size%2 > 0 {
-		size++
+func calcMaplandSize(trigger int) int {
+	trigger++
+	nines := trigger / 9
+	extra := trigger % 9
+	result := extra
+	for n := 0; n < nines; n++ {
+		result = result * 10
+		result += 9
 	}
+	return (result + 1) * 2
+}
 
+// New MapLand
+func New(trigger int) *MapLand {
+	size := calcMaplandSize(trigger)
+	fmt.Println("Size", size)
 	land := make([][]byte, size)
 	for i := range land {
 		land[i] = make([]byte, size)
@@ -97,7 +107,8 @@ func (m *MapLand) DrawImage(fname string) {
 	upLeft := image.Point{0, 0}
 	lowRight := image.Point{m.size, m.size}
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
-	Red := color.RGBA{0xff, 0x00, 0x00, 0xff}
+	mineColour := color.RGBA{0xff, 0x00, 0x00, 0xff}
+	clearColour := color.White
 	accessableColour := color.RGBA{0x1d, 0xd8, 0x80, 0xff}
 	for x, c := range m.land {
 		for y, v := range c {
@@ -105,9 +116,9 @@ func (m *MapLand) DrawImage(fname string) {
 			py := m.size - y
 			switch v {
 			case clear:
-				img.Set(px, py, color.White)
+				img.Set(px, py, clearColour)
 			case mine:
-				img.Set(px, py, Red)
+				img.Set(px, py, mineColour)
 			case accessable:
 				img.Set(px, py, accessableColour)
 			default:
