@@ -1,6 +1,7 @@
 package robotview
 
 import (
+	"container/list"
 	"errors"
 
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
@@ -101,6 +102,7 @@ func (r robot) coords() (int, int) {
 	return r.x, r.y
 }
 
+/*
 type robotQueue struct {
 	queue []robot
 }
@@ -121,6 +123,31 @@ func (q *robotQueue) pop() robot {
 
 func newRobotQueue() *robotQueue {
 	return &robotQueue{queue: []robot{}}
+}
+*/
+
+type robotQueue struct {
+	queue *list.List
+}
+
+func (q *robotQueue) size() int {
+	return q.queue.Len()
+}
+
+func (q *robotQueue) push(r robot) {
+	q.queue.PushBack(r)
+}
+
+func (q *robotQueue) pop() robot {
+	e := q.queue.Front() // first element
+	r := e.Value.(robot)
+	q.queue.Remove(e)
+	return r
+}
+
+func newRobotQueue() *robotQueue {
+	q := list.New()
+	return &robotQueue{queue: q}
 }
 
 // FloodFill marks the available non mined space as accessable
