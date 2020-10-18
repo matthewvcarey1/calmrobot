@@ -130,24 +130,24 @@ type robotQueue struct {
 	queue *list.List
 }
 
-func (q *robotQueue) size() int {
+func (q robotQueue) size() int {
 	return q.queue.Len()
 }
 
-func (q *robotQueue) push(r robot) {
+func (q robotQueue) push(r robot) {
 	q.queue.PushBack(r)
 }
 
-func (q *robotQueue) pop() robot {
+func (q robotQueue) pop() robot {
 	e := q.queue.Front() // first element
 	r := e.Value.(robot)
 	q.queue.Remove(e)
 	return r
 }
 
-func newRobotQueue() *robotQueue {
+func newRobotQueue() robotQueue {
 	q := list.New()
-	return &robotQueue{queue: q}
+	return robotQueue{queue: q}
 }
 
 // FloodFill marks the available non mined space as accessable
