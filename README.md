@@ -20,6 +20,10 @@ This prints the large maps as acsii text to stdout
 This writes two png image files mines.png and robot.png showing the world as a picture.
 The file mines.png shows the mines and robot.png shows the accessable areas for the robot. (see picture)
 
+./robot.exe -safe X
+
+Sets a new value for the safe number other than the standard 23.
+
 ./robot.exe -help
 
 Prints a help text and exits
@@ -29,7 +33,9 @@ Prints a help text and exits
 
 ## Improvents
 
-The code probably could be made to go faster. 
+The code probably could be made to go faster. There is symmetry in the four quarters we could probably do one quarter and multiply by 4, we would have only to count the centre point and origin lines once. 
+
+The big O value is poor as the performance of the code degrades sharply as the safe number increments.
 
 The lack of Unit tests is more of an issue. 
 

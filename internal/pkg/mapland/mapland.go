@@ -21,12 +21,22 @@ type MapLand struct {
 	land [][]byte
 }
 
-// New MapLand
-func New(size uint) *MapLand {
-	if size%2 > 0 {
-		size++
+func calcMaplandSize(trigger int) int {
+	trigger++
+	nines := trigger / 9
+	extra := trigger % 9
+	result := extra
+	for n := 0; n < nines; n++ {
+		result = result * 10
+		result += 9
 	}
+	return (result + 1) * 2
+}
 
+// New MapLand
+func New(trigger int) *MapLand {
+	size := calcMaplandSize(trigger)
+	fmt.Println("Size", size)
 	land := make([][]byte, size)
 	for i := range land {
 		land[i] = make([]byte, size)
