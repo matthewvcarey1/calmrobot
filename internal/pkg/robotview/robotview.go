@@ -2,7 +2,6 @@ package robotview
 
 import (
 	"container/list"
-	"errors"
 
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/mapland"
 )
@@ -154,7 +153,7 @@ func newRobotQueue() *robotQueue {
 // by the robot and returns the number of coordinates it contains
 func (rv *RobotView) FloodFill(x int, y int) (int, error) {
 	queue := newRobotQueue()
-	x1, y1, x2, y2 := rv.land.GetStartEnd()
+	//x1, y1, x2, y2 := rv.land.GetStartEnd()
 	count := int(0)
 	if !rv.land.IsClear(x, y) {
 		return 0, nil
@@ -167,9 +166,9 @@ func (rv *RobotView) FloodFill(x int, y int) (int, error) {
 	})
 	for queue.size() > 0 {
 		r := queue.pop()
-		if r.x == x1 || r.x == x2-1 || r.y == y1 || r.y == y2-1 {
-			return 0, errors.New("FloodFill has reached the edge of the world, the world needs to be bigger")
-		}
+		//if r.x == x1 || r.x == x2-1 || r.y == y1 || r.y == y2-1 {
+		//	return 0, errors.New("FloodFill has reached the edge of the world, the world needs to be bigger")
+		//}
 		if w := r.west(); rv.land.IsClear(w.coords()) {
 			rv.land.SetAccessable(w.coords())
 			count++

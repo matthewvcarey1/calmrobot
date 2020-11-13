@@ -21,7 +21,7 @@ type MapLand struct {
 	land [][]byte
 }
 
-func calcMaplandSize(trigger int) int {
+func CalcMaplandSize(trigger int) int {
 	trigger++
 	nines := trigger / 9
 	extra := trigger % 9
@@ -30,12 +30,12 @@ func calcMaplandSize(trigger int) int {
 		result = result * 10
 		result += 9
 	}
-	return (result + 1) * 2
+	return (result + 1)
 }
 
 // New MapLand
 func New(trigger int) *MapLand {
-	size := calcMaplandSize(trigger)
+	size := CalcMaplandSize(trigger)
 	fmt.Println("Size", size)
 	land := make([][]byte, size)
 	for i := range land {
@@ -46,38 +46,33 @@ func New(trigger int) *MapLand {
 
 // GetStartEnd the start and ends of the land in robotview coordinates
 func (m *MapLand) GetStartEnd() (int, int, int, int) {
-	return (m.half) - m.size, m.half - m.size, m.half, m.half
+	return 0, 0, m.size, m.size
 }
 
 // Get coordinate contents
 func (m *MapLand) Get(x int, y int) byte {
-	x += m.half
-	y += m.half
 	return m.land[x][y]
 }
 
 func (m *MapLand) IsClear(x int, y int) bool {
+	if y < 0 || x < 0 {
+		return false
+	}
 	return m.Get(x, y) == clear
 }
 
 // Set mark a coordinate as visitable
 func (m *MapLand) SetAccessable(x int, y int) {
-	x += m.half
-	y += m.half
 	m.land[x][y] = accessable
 }
 
 // SetMine mark a coordinate as a mine
 func (m *MapLand) SetMine(x int, y int) {
-	x += m.half
-	y += m.half
 	m.land[x][y] = mine
 }
 
 // SetClear mark a coordinate as not a mine
 func (m *MapLand) SetClear(x int, y int) {
-	x += m.half
-	y += m.half
 	m.land[x][y] = clear
 }
 
