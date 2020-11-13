@@ -100,7 +100,7 @@ func (m *MapLand) Draw() {
 // Draw the whole map as a png file
 func (m *MapLand) DrawImage(fname string) {
 	upLeft := image.Point{0, 0}
-	lowRight := image.Point{m.size, m.size}
+	lowRight := image.Point{m.size * 2, m.size * 2}
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
 	mineColour := color.RGBA{0xff, 0x00, 0x00, 0xff}
 	clearColour := color.White
