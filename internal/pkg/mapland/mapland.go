@@ -109,13 +109,28 @@ func (m *MapLand) DrawImage(fname string) {
 		for y, v := range c {
 			px := m.size - x
 			py := m.size - y
+			qx := m.size + x
+			qy := m.size - y
+			rx := m.size - x
+			ry := m.size + y
+			sx := m.size + x
+			sy := m.size + y
 			switch v {
 			case clear:
 				img.Set(px, py, clearColour)
+				img.Set(qx, qy, clearColour)
+				img.Set(rx, ry, clearColour)
+				img.Set(sx, sy, clearColour)
 			case mine:
 				img.Set(px, py, mineColour)
+				img.Set(qx, qy, mineColour)
+				img.Set(rx, ry, mineColour)
+				img.Set(sx, sy, mineColour)
 			case accessable:
 				img.Set(px, py, accessableColour)
+				img.Set(qx, qy, accessableColour)
+				img.Set(rx, ry, accessableColour)
+				img.Set(sx, sy, accessableColour)
 			default:
 				// Use zero value.
 			}
