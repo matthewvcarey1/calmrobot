@@ -21,6 +21,7 @@ type MapLand struct {
 	land [][]byte
 }
 
+// CalcMaplandSize calculates length of sides needed for a given safe value
 func CalcMaplandSize(trigger int) int {
 	trigger++
 	nines := trigger / 9
@@ -54,6 +55,7 @@ func (m *MapLand) Get(x int, y int) byte {
 	return m.land[x][y]
 }
 
+// IsClear returns true if coordinate is clear
 func (m *MapLand) IsClear(x int, y int) bool {
 	if y < 0 || x < 0 {
 		return false
@@ -61,7 +63,7 @@ func (m *MapLand) IsClear(x int, y int) bool {
 	return m.Get(x, y) == clear
 }
 
-// Set mark a coordinate as visitable
+// SetAccessable mark a coordinate as visitable
 func (m *MapLand) SetAccessable(x int, y int) {
 	m.land[x][y] = accessable
 }
@@ -77,6 +79,7 @@ func (m *MapLand) SetClear(x int, y int) {
 }
 
 // This is not used but could be used for testing.
+
 // Count the robot visitable area
 func (m *MapLand) Count() int {
 	count := 0
@@ -97,7 +100,7 @@ func (m *MapLand) Draw() {
 	}
 }
 
-// Draw the whole map as a png file
+// DrawImage the whole map as a png file using the one quadrant that we have calculated
 func (m *MapLand) DrawImage(fname string) {
 	upLeft := image.Point{0, 0}
 	lowRight := image.Point{m.size * 2, m.size * 2}
