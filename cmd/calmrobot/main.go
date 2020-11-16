@@ -9,6 +9,11 @@ import (
 	"github.com/matthewvcarey1/calmrobot/internal/pkg/robotview"
 )
 
+const (
+	origin    = 1
+	quadrants = 4
+)
+
 var verbose = flag.Bool("verbose", false, "prints large maps of the land before and after the flood fill, best pipe to a file")
 var images = flag.Bool("images", false, "generates png files")
 var safe = flag.Int("safe", 23, "safe value for robot")
@@ -39,6 +44,8 @@ func main() {
 		println("Error:", err.Error())
 		return
 	}
+	axisfill := mapland.CalcMaplandSize(*safe) - 1
+	count = (count-axisfill)*quadrants + origin
 	if *verbose {
 		fmt.Println()
 		land.Draw()

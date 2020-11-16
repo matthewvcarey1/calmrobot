@@ -21,7 +21,8 @@ type MapLand struct {
 	land [][]byte
 }
 
-func calcMaplandSize(trigger int) int {
+// CalcMaplandSize calculates length of sides needed for a given safe value
+func CalcMaplandSize(trigger int) int {
 	trigger++
 	nines := trigger / 9
 	extra := trigger % 9
@@ -30,12 +31,12 @@ func calcMaplandSize(trigger int) int {
 		result = result * 10
 		result += 9
 	}
-	return (result + 1) * 2
+	return (result + 1)
 }
 
 // New MapLand
 func New(trigger int) *MapLand {
-	size := calcMaplandSize(trigger)
+	size := CalcMaplandSize(trigger)
 	fmt.Println("Size", size)
 	land := make([][]byte, size)
 	for i := range land {
@@ -46,42 +47,39 @@ func New(trigger int) *MapLand {
 
 // GetStartEnd the start and ends of the land in robotview coordinates
 func (m *MapLand) GetStartEnd() (int, int, int, int) {
-	return (m.half) - m.size, m.half - m.size, m.half, m.half
+	return 0, 0, m.size, m.size
 }
 
 // Get coordinate contents
 func (m *MapLand) Get(x int, y int) byte {
-	x += m.half
-	y += m.half
 	return m.land[x][y]
 }
 
+// IsClear returns true if coordinate is clear
 func (m *MapLand) IsClear(x int, y int) bool {
+	if y < 0 || x < 0 {
+		return false
+	}
 	return m.Get(x, y) == clear
 }
 
-// Set mark a coordinate as visitable
+// SetAccessable mark a coordinate as visitable
 func (m *MapLand) SetAccessable(x int, y int) {
-	x += m.half
-	y += m.half
 	m.land[x][y] = accessable
 }
 
 // SetMine mark a coordinate as a mine
 func (m *MapLand) SetMine(x int, y int) {
-	x += m.half
-	y += m.half
 	m.land[x][y] = mine
 }
 
 // SetClear mark a coordinate as not a mine
 func (m *MapLand) SetClear(x int, y int) {
-	x += m.half
-	y += m.half
 	m.land[x][y] = clear
 }
 
 // This is not used but could be used for testing.
+
 // Count the robot visitable area
 func (m *MapLand) Count() int {
 	count := 0
@@ -102,10 +100,10 @@ func (m *MapLand) Draw() {
 	}
 }
 
-// Draw the whole map as a png file
+// DrawImage the whole map as a png file using the one quadrant that we have calculated
 func (m *MapLand) DrawImage(fname string) {
 	upLeft := image.Point{0, 0}
-	lowRight := image.Point{m.size, m.size}
+	lowRight := image.Point{m.size * 2, m.size * 2}
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
 	mineColour := color.RGBA{0xff, 0x00, 0x00, 0xff}
 	clearColour := color.White
@@ -114,13 +112,28 @@ func (m *MapLand) DrawImage(fname string) {
 		for y, v := range c {
 			px := m.size - x
 			py := m.size - y
+			qx := m.size + x
+			qy := m.size - y
+			rx := m.size - x
+			ry := m.size + y
+			sx := m.size + x
+			sy := m.size + y
 			switch v {
 			case clear:
 				img.Set(px, py, clearColour)
+				img.Set(qx, qy, clearColour)
+				img.Set(rx, ry, clearColour)
+				img.Set(sx, sy, clearColour)
 			case mine:
 				img.Set(px, py, mineColour)
+				img.Set(qx, qy, mineColour)
+				img.Set(rx, ry, mineColour)
+				img.Set(sx, sy, mineColour)
 			case accessable:
 				img.Set(px, py, accessableColour)
+				img.Set(qx, qy, accessableColour)
+				img.Set(rx, ry, accessableColour)
+				img.Set(sx, sy, accessableColour)
 			default:
 				// Use zero value.
 			}
