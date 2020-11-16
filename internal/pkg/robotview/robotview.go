@@ -86,30 +86,6 @@ func (r robot) coords() (int, int) {
 	return r.x, r.y
 }
 
-/*
-type robotQueue struct {
-	queue []robot
-}
-
-func (q *robotQueue) size() int {
-	return len(q.queue)
-}
-
-func (q *robotQueue) push(r robot) {
-	q.queue = append(q.queue, r)
-}
-
-func (q *robotQueue) pop() robot {
-	r := q.queue[0]       // first element
-	q.queue = q.queue[1:] //Dequeue
-	return r
-}
-
-func newRobotQueue() *robotQueue {
-	return &robotQueue{queue: []robot{}}
-}
-*/
-
 type robotQueue struct {
 	queue *list.List
 }
