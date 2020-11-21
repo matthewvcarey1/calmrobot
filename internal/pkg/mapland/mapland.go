@@ -37,7 +37,7 @@ func CalcMaplandSize(trigger int) int {
 // New MapLand
 func New(trigger int) *MapLand {
 	size := CalcMaplandSize(trigger)
-	fmt.Println("Size", size)
+	//fmt.Println("Size", size)
 	land := make([][]byte, size)
 	for i := range land {
 		land[i] = make([]byte, size)
