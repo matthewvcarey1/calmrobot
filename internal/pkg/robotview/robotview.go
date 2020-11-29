@@ -47,10 +47,10 @@ func (rv *RobotView) MarkMines() {
 	x1, y1, x2, y2 := rv.land.GetStartEnd()
 	for x := x1; x < x2; x++ {
 		for y := y1; y < y2; y++ {
-			if !rv.isSafe(x, y) {
-				rv.land.SetMine(x, y)
-			} else {
+			if rv.isSafe(x, y) {
 				rv.land.SetClear(x, y)
+			} else {
+				rv.land.SetMine(x, y)
 			}
 		}
 	}
