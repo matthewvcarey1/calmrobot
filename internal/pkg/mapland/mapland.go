@@ -106,8 +106,9 @@ func (m *MapLand) DrawImage(fname string) {
 	lowRight := image.Point{m.size * 2, m.size * 2}
 	img := image.NewRGBA(image.Rectangle{upLeft, lowRight})
 	mineColour := color.RGBA{0xff, 0x00, 0x00, 0xff}
-	clearColour := color.White
-	accessableColour := color.RGBA{0x1d, 0xd8, 0x80, 0xff}
+	clearColour := color.RGBA{0xff, 0xe6, 0x00, 0xff}
+	accessableColour := color.RGBA{0x00, 0xf6, 0xff, 0xff}
+
 	for x, c := range m.land {
 		for y, v := range c {
 			px := m.size - x
