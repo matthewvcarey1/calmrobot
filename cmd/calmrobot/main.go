@@ -45,7 +45,7 @@ func main() {
 	// that represents the edge of the map. So we remove it.
 	// Thus axisfill represents all the accessable coords in one axis.
 
-	// We only caclulate one quadrant as they are all reflections
+	// We only caclulate one quadrant as they are all rotations
 	// of one another and then we multiply by 4 but we must first
 	// strip one axis from each quadrants results.
 
