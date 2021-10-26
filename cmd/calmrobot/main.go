@@ -35,7 +35,7 @@ func main() {
 	}
 	// Flood fill the from the centre of the map
 	// the accessable coordinates
-	count, err := rv.FloodFill(0, 0)
+	countInQuadrant, err := rv.FloodFill(0, 0)
 	if err != nil {
 		// An error about the flood reaching the edge of the world
 		println("Error:", err.Error())
@@ -54,7 +54,7 @@ func main() {
 	// And then add the shared origin back at the end.
 
 	axisfill := mapland.CalcMaplandSize(*safe) - 1
-	count = (count-axisfill)*quadrants + origin
+	count := (countInQuadrant-axisfill)*quadrants + origin
 
 	if *images {
 		land.DrawImage("robot.png")
