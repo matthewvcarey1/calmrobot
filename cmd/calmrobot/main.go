@@ -41,6 +41,18 @@ func main() {
 		println("Error:", err.Error())
 		return
 	}
+	// mapland.CalcMaplandSize(num) adds a padding value of 1
+	// that represents the edge of the map. So we remove it.
+	// Thus axisfill represents all the accessable coords in one axis.
+
+	// We only caclulate one quadrant as they are all reflections
+	// of one another and then we multiply by 4 but we must first
+	// strip one axis from each quadrants results.
+
+	// Each quadrant will have two axises but 4 X 2 = 8
+	// Which is 4 too many so we have to remove the 4 surplus axises
+	// And then add the shared origin back at the end.
+
 	axisfill := mapland.CalcMaplandSize(*safe) - 1
 	count = (count-axisfill)*quadrants + origin
 
