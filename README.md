@@ -33,12 +33,8 @@ Prints a help text and exits
 
 ## Improvents
 
-The code probably could be made to go faster. There is symmetry in the four quarters we could probably do one quarter and multiply by 4, we would have only to count the centre point and origin lines once. 
-
 The big O value is poor as the performance of the code degrades sharply as the safe number increments.
-
-The lack of Unit tests is more of an issue. 
-
+ 
 There is no error checking for input conditions.
 The out of bounds errors will be caught by overflow and 
 I, otherwise would have to cause a Panic and terminate 
