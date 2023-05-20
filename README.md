@@ -1,7 +1,7 @@
 # Calmrobot
 
 This program calculates the coordinates that are visitable by a robot starting on (0,0) that can move
-horizontally or vertically one position at a time. This is in a world where every coodinate pair whose combined individual absolute digits adds up to a sum greater than 23 has a mine on it.
+horizontally or vertically one position at a time. This is in a world where every coordinate pair whose combined individual absolute digits adds up to a sum greater than 23 has a mine on it.
 
 ## To build
 
